@@ -9,6 +9,11 @@
 # Español
 detect-silly-deps --lang=es
 
+## Uso con CLI 
+detect-silly-deps --stats
+detect-silly-deps --verbose
+detect-silly-deps --why
+
 ## ?? Contribuir
 1. Clona el repositorio
 2. Instala dependencias: `npm install`
