@@ -4,8 +4,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## ✨ Características Principales
-- ✅ Detecta 200+ dependencias absurdas
-
+- ✅ Detecta 200+ dependencias absurdas o poco utiles
+- 
 # Español
 detect-silly-deps --lang=es
 
