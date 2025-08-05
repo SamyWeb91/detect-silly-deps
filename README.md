@@ -20,10 +20,10 @@ npm install -g detect-silly-deps
 npm install --save-dev detect-silly-deps
 
 # Uso básico (CLI)
-silly-audit
+detect-silly-deps
 
 # Modo detallado
-silly-audit --verbose
+detect-silly-deps --verbose
 
 # Mostrar estadísticas y tamaños
 detect-silly-deps --stats
