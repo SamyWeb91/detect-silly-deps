@@ -5,37 +5,6 @@
 
 ## ✨ Características Principales
 - ✅ Detecta 200+ dependencias absurdas
-- ✅ Auditoría de tamaño de librerías
-- ✅ Escaneo de vulnerabilidades de seguridad
-- ✅ Auditoría OSS (licencias y dependencias)
-- ✅ Clasificación por categorías (boolean, math, string, etc.)
-- ✅ Soporte multiidioma (inglés/español)
-- ✅ Sugiere alternativas nativas
-- ✅ Auto-corrección (`--fix`)
-
-# Instalación global
-npm install -g detect-silly-deps
-
-# Instalación local
-npm install --save-dev detect-silly-deps
-
-# Uso básico (CLI)
-detect-silly-deps
-
-# Modo detallado
-detect-silly-deps --verbose
-
-# Mostrar estadísticas y tamaños
-detect-silly-deps --stats
-
-# Escanear vulnerabilidades
-detect-silly-deps --security
-
-# Auditoría OSS (licencias)
-detect-silly-deps --oss
-
-# Consultar paquete específico
-detect-silly-deps --why=is-odd
 
 # Español
 detect-silly-deps --lang=es
