@@ -1,0 +1,12 @@
+{
+  "summary": {
+    "title": "Resumen de Dependencias",
+    "direct": "Directas",
+    "indirect": "Indirectas",
+    "noSillyDeps": "No se encontraron dependencias innecesarias"
+  },
+  "checkIfNeeded": "Revisar si es necesaria",
+  "other": {
+    "title": "Otras Dependencias"
+  }
+}

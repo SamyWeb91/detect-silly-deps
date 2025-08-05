@@ -1,0 +1,31 @@
+{
+  "name": "detect-silly-deps",
+  "version": "3.3.1",
+  "description": "Detecta dependencias absurdas en proyectos Node.js y sugiere alternativas nativas",
+  "main": "index.js",
+  "scripts": {
+    "audit": "node index.js",
+    "test": "echo \"No hay tests configurados\" && exit 0"
+  },
+  "keywords": [
+    "audit",
+    "dependencies",
+    "optimization",
+    "nodejs"
+  ],
+  "author": "Samuel Tamayo Infante",
+  "license": "MIT",
+  "bin": {
+    "detect-silly-deps": "index.js"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "audit": "^0.0.6",
+    "axios": "^1.11.0",
+    "colors": "^1.4.0",
+    "glob": "^11.0.3",
+    "i18n": "^0.15.1"
+  }
+}

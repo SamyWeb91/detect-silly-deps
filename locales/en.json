@@ -1,0 +1,15 @@
+{
+	"summary": {
+		"title": "Dependencies Summary",
+		"direct": "Direct",
+		"indirect": "Indirect",
+		"noSillyDeps": "No silly dependencies found"
+	},
+	"checkIfNeeded": "Check if needed",
+	"other": {
+		"title": "Other Dependencies"
+	},
+	"results": {
+		"title": "results.title"
+	}
+}
