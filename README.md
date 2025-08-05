@@ -10,9 +10,9 @@
 detect-silly-deps --lang=es
 
 ## Uso con CLI 
-detect-silly-deps --stats
-detect-silly-deps --verbose
-detect-silly-deps --why
+detect-silly-deps --stats  (muestra el tamano de la libreria)
+detect-silly-deps --verbose (reporete detallado)
+detect-silly-deps --why (explica comanados)
 
 ## ?? Contribuir
 1. Clona el repositorio
