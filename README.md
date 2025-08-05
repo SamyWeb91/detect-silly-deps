@@ -13,91 +13,32 @@
 - ✅ Sugiere alternativas nativas
 - ✅ Auto-corrección (`--fix`)
 
-## 🚀 Instalación
-```bash
+# Instalación global
 npm install -g detect-silly-deps
 
-para uso local
-
+# Instalación local
 npm install --save-dev detect-silly-deps
 
-para uso básico (CLI)
-# Auditoría básica
+# Uso básico (CLI)
 silly-audit
 
 # Modo detallado
 silly-audit --verbose
 
 # Mostrar estadísticas y tamaños
-silly-audit --stats
+detect-silly-deps --stats
 
 # Escanear vulnerabilidades
-silly-audit --security
+detect-silly-deps --security
 
 # Auditoría OSS (licencias)
-silly-audit --oss
-
-# Auto-corregir dependencias
-silly-audit --fix
+detect-silly-deps --oss
 
 # Consultar paquete específico
-silly-audit --why=is-odd
+detect-silly-deps --why=is-odd
 
 # Español
-silly-audit --lang=es
-
-#†**********************************†*********************
-Uso programático:
-
-const { audit, getVulnerabilityAudit } = require('detect-silly-deps');
-
-// Auditoría básica
-const results = await audit();
-
-// Auditoría de seguridad
-const vulns = await getVulnerabilityAudit();
-
-// Obtener tamaño de paquete
-const { getPackageSize } = require('detect-silly-deps');
-const size = await getPackageSize('lodash.get');
-
-## ?? Novedades en v3.0
-- **Auditoría de seguridad** integrada (`npm audit`)
-- **Tamaños de paquetes** en tiempo real
-- **Análisis OSS** de licencias
-- **30% más rápido** con caché inteligente
-- **Nuevas categorías** de dependencias
-- **Soporte para monorepos**
-
-## ?? API Completa
-
-### Métodos Principales
-| Método | Descripción |
-|--------|-------------|
-| `audit(options)` | Auditoría completa de dependencias |
-| `getVulnerabilityAudit()` | Escaneo de vulnerabilidades |
-| `getOssAudit()` | Auditoría de licencias OSS |
-| `getPackageSize(pkgName)` | Obtiene tamaño de paquete |
-| `suggestAlternative(pkgName)` | Sugiere alternativa nativa |
-
-### Opciones de `audit()`
-```typescript
-{
-  returnData?: boolean;     // Retorna datos en lugar de imprimir
-  verbose?: boolean;       // Modo detallado
-  stats?: boolean;         // Mostrar estadísticas
-  security?: boolean;      // Incluir vulnerabilidades
-  oss?: boolean;           // Incluir datos OSS
-  fix?: boolean;           // Auto-corregir
-  lang?: 'en' | 'es';      // Idioma
-}
-```
-
-## ?? Internacionalización
-Soporte para inglés y español:
-```bash
-silly-audit --lang=es
-```
+detect-silly-deps --lang=es
 
 ## ?? Contribuir
 1. Clona el repositorio
