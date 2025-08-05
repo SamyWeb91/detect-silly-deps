@@ -1,6 +1,6 @@
 {
   "name": "detect-silly-deps",
-  "version": "3.3.1",
+  "version": "3.3.2",
   "description": "Detecta dependencias absurdas en proyectos Node.js y sugiere alternativas nativas",
   "main": "index.js",
   "scripts": {
