@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 'use strict';
+
 // Importaciones con manejo de errores mejorado
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 const i18n = require('i18n');
-// ConfiguraciÃ³n de rutas seguras
+
+// Configuración de rutas seguras
 const LIB_DIR = path.join(__dirname, 'lib');
 const LOCALES_DIR = path.join(__dirname, 'locales');
 const DB_PATH = path.join(__dirname, 'silly-db.json');
@@ -15,11 +17,11 @@ let colors;
 try {
   colors = require(path.join(LIB_DIR, 'colors'));
 } catch (error) {
-  console.error('âŒ  Error cargando colores:', error.message);
+  console.error('✖  Error cargando colores:', error.message);
   process.exit(1);
 }
 
-// ConfiguraciÃ³n mejorada de i18n
+// Configuración mejorada de i18n
 try {
   i18n.configure({
     locales: ['en', 'es'],
@@ -31,7 +33,7 @@ try {
     syncFiles: false
   });
 } catch (error) {
-  console.error(`${colors.red}âŒ  Error configurando i18n: ${error.message}${colors.reset}`);
+  console.error(`${colors.red}✖  Error configurando i18n: ${error.message}${colors.reset}`);
   process.exit(1);
 }
 
@@ -40,20 +42,20 @@ let sillyList = {};
 try {
   sillyList = require(DB_PATH);
 } catch (error) {
-  console.error(`${colors.red}âŒ  Error cargando la base de datos: ${error.message}${colors.reset}`);
+  console.error(`${colors.red}✖  Error cargando la base de datos: ${error.message}${colors.reset}`);
   process.exit(1);
 }
 
-// ValidaciÃ³n de estructura de datos
+// Validación de estructura de datos
 function validateDatabase(db) {
   if (!db || typeof db !== 'object') {
-    throw new Error('Estructura de base de datos invÃ¡lida');
+    throw new Error('Estructura de base de datos inválida');
   }
   return db;
 }
 sillyList = validateDatabase(sillyList);
 
-// FunciÃ³n mejorada para obtener dependencias
+// Función mejorada para obtener dependencias (ahora con rutas)
 async function getAllDependencies(pkgPath) {
   const readFile = (file) => fs.promises.readFile(file, 'utf-8').catch(() => null);
   try {
@@ -74,41 +76,41 @@ async function getAllDependencies(pkgPath) {
       depTree = { dependencies: {} };
     }
     const indirectDeps = [];
-    const traverse = (deps, parent) => {
+    const traverse = (deps, parent, currentPath = []) => {
       if (!deps) return;
       Object.entries(deps).forEach(([name, pkg]) => {
+        const newPath = [...currentPath, name];
         if (!directDeps.includes(name) && !indirectDeps.some(d => d.name === name)) {
           indirectDeps.push({
             name,
             parent: parent || 'root',
             version: pkg.version,
-            resolved: pkg.resolved
+            resolved: pkg.resolved,
+            path: newPath.join(' > ') // Nueva propiedad: ruta jerárquica
           });
         }
-        if (pkg.dependencies) traverse(pkg.dependencies, name);
+        if (pkg.dependencies) traverse(pkg.dependencies, name, newPath);
       });
     };
     traverse(depTree.dependencies);
     return { direct: directDeps, indirect: indirectDeps };
   } catch (error) {
-    console.error(`${colors.red}âŒ  Error obteniendo dependencias: ${error.message}${colors.reset}`);
+    console.error(`${colors.red}✖  Error obteniendo dependencias: ${error.message}${colors.reset}`);
     return { direct: [], indirect: [] };
   }
 }
 
-// Analizador mejorado de dependencias
+// Analizador mejorado de dependencias (ahora maneja rutas)
 function analyzeDependencies(deps) {
   const results = {
     direct: { count: 0, packages: [] },
     indirect: { count: 0, packages: [] },
     byCategory: {}
   };
-  
   Object.keys(sillyList).forEach(category => {
     results.byCategory[category] = [];
   });
   results.byCategory.other = [];
-  
   const analyzeDep = (dep, type, parent = null) => {
     const depName = typeof dep === 'string' ? dep : dep.name;
     let found = false;
@@ -120,7 +122,8 @@ function analyzeDependencies(deps) {
           name: depName,
           solution: items[depName],
           type,
-          ...(parent && { via: parent })
+          ...(parent && { via: parent }),
+          ...(typeof dep === 'object' && dep.path && { path: dep.path }) // Preserva la ruta
         });
         found = true;
         break;
@@ -131,26 +134,24 @@ function analyzeDependencies(deps) {
         name: depName,
         solution: i18n.__('checkIfNeeded'),
         type,
-        ...(parent && { via: parent })
+        ...(parent && { via: parent }),
+        ...(typeof dep === 'object' && dep.path && { path: dep.path }) // Preserva la ruta
       });
     }
   };
-
   deps.direct.forEach(dep => analyzeDep(dep, 'direct'));
   deps.indirect.forEach(dep => analyzeDep(dep, 'indirect', dep.parent));
   return results;
 }
 
-// FunciÃ³n mejorada para mostrar resultados
+// Función mejorada para mostrar resultados (ahora muestra rutas en verbose)
 function printResults(results, options = {}) {
   const { verbose = false, showAll = false } = options;
   const output = [];
   let hasSillyDeps = false;
-  
   output.push(`${colors.cyan}=== ${i18n.__('summary.title')} ===${colors.reset}`);
   output.push(`${i18n.__('summary.direct')}: ${results.direct.count}`);
   output.push(`${i18n.__('summary.indirect')}: ${results.indirect.count}\n`);
-  
   Object.entries(results.byCategory).forEach(([category, items]) => {
     if (items.length > 0) {
       hasSillyDeps = true;
@@ -165,14 +166,17 @@ function printResults(results, options = {}) {
             ? colors.blue + i18n.__('type.direct')
             : colors.magenta + i18n.__('type.indirect');
           output.push(`  ${i18n.__('type')}: ${typeText}${colors.reset}`);
+          // Nueva línea: Muestra la ruta del paquete si está disponible
+          if (item.path) {
+            output.push(`  ${colors.dim}Ruta: ${item.path}${colors.reset}`);
+          }
         }
       });
       output.push('');
     }
   });
-
   if (!hasSillyDeps) {
-    output.push(`${colors.green}âœ“ ${i18n.__('noSillyDeps')}${colors.reset}`);
+    output.push(`${colors.green}✓ ${i18n.__('noSillyDeps')}${colors.reset}`);
   } else {
     const getDevDeps = () => {
       try {
@@ -184,13 +188,12 @@ function printResults(results, options = {}) {
     };
     const prodDeps = results.direct.packages;
     const devDeps = getDevDeps();
-    
     if (prodDeps.length > 0) {
-      output.push(`${colors.magenta}â†’ ${i18n.__('remove.prod')}:${colors.reset}`);
+      output.push(`${colors.magenta}→ ${i18n.__('remove.prod')}:${colors.reset}`);
       output.push(`   npm uninstall ${prodDeps.join(' ')}`);
     }
     if (devDeps.length > 0) {
-      output.push(`${colors.magenta}â†’ ${i18n.__('remove.dev')}:${colors.reset}`);
+      output.push(`${colors.magenta}→ ${i18n.__('remove.dev')}:${colors.reset}`);
       output.push(`   npm uninstall -D ${devDeps.join(' ')}`);
     }
     if (showAll) {
@@ -203,7 +206,7 @@ function printResults(results, options = {}) {
   return hasSillyDeps;
 }
 
-// AuditorÃ­a principal mejorada
+// Auditoría principal mejorada
 async function audit(options = {}) {
   try {
     const pkgPath = path.resolve(process.cwd(), 'package.json');
@@ -225,7 +228,7 @@ async function audit(options = {}) {
       packagePath: pkgPath
     };
   } catch (error) {
-    console.error(`${colors.red}âŒ  ${i18n.__('errors.generic')}: ${error.message}${colors.reset}`);
+    console.error(`${colors.red}✖  ${i18n.__('errors.generic')}: ${error.message}${colors.reset}`);
     return { error: error.message };
   }
 }
@@ -253,37 +256,31 @@ function suggestAlternative(pkgName) {
   return { isSilly: false };
 }
 
-// FunciÃ³n para desinstalar todas las dependencias con confirmaciÃ³n
+// Función para desinstalar todas las dependencias con confirmación
 async function uninstallAllDependencies(results, options = {}) {
   const readline = require('readline').createInterface({
     input: process.stdin,
     output: process.stdout
   });
-
   const question = (query) => new Promise(resolve => {
     readline.question(query, answer => resolve(answer.toLowerCase()));
   });
-
   try {
     if (!results.direct.packages.length) {
-      console.log(`${colors.green}âœ“ ${i18n.__('noDepsToRemove')}${colors.reset}`);
+      console.log(`${colors.green}✓ ${i18n.__('noDepsToRemove')}${colors.reset}`);
       return;
     }
-
     console.log('\n' + colors.yellow + i18n.__('uninstall.warning') + colors.reset);
     console.log(i18n.__('uninstall.list') + ': ' + colors.red + results.direct.packages.join(', ') + colors.reset);
-
     const answer = await question(i18n.__('uninstall.confirm') + ' (y/N) ');
     if (answer !== 'y' && answer !== 'yes') {
       console.log(colors.cyan + i18n.__('uninstall.cancelled') + colors.reset);
       return;
     }
-
     const pkgPath = path.resolve(process.cwd(), 'package.json');
     const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf-8'));
     const prodDeps = [];
     const devDeps = [];
-
     results.direct.packages.forEach(dep => {
       if (pkg.devDependencies?.[dep]) {
         devDeps.push(dep);
@@ -291,20 +288,17 @@ async function uninstallAllDependencies(results, options = {}) {
         prodDeps.push(dep);
       }
     });
-
     if (prodDeps.length > 0) {
       console.log('\n' + colors.magenta + i18n.__('uninstall.removingProd') + colors.reset);
       execSync(`npm uninstall ${prodDeps.join(' ')}`, { stdio: 'inherit' });
     }
-
     if (devDeps.length > 0) {
       console.log('\n' + colors.magenta + i18n.__('uninstall.removingDev') + colors.reset);
       execSync(`npm uninstall -D ${devDeps.join(' ')}`, { stdio: 'inherit' });
     }
-
-    console.log('\n' + colors.green + 'âœ“ ' + i18n.__('uninstall.complete') + colors.reset);
+    console.log('\n' + colors.green + '✓ ' + i18n.__('uninstall.complete') + colors.reset);
   } catch (error) {
-    console.error('\n' + colors.red + 'âŒ ' + i18n.__('errors.uninstallFailed') + ': ' + error.message + colors.reset);
+    console.error('\n' + colors.red + '✖ ' + i18n.__('errors.uninstallFailed') + ': ' + error.message + colors.reset);
   } finally {
     readline.close();
   }
@@ -322,11 +316,9 @@ async function runCLI() {
     returnData: args.includes('--json'),
     uninstallAll: args.includes('--uninstall-all')
   };
-
   if (options.lang && ['en', 'es'].includes(options.lang)) {
     i18n.setLocale(options.lang);
   }
-
   if (options.why) {
     const pkgStats = await getPackageStats(options.why);
     if (pkgStats) {
@@ -344,16 +336,13 @@ async function runCLI() {
     }
     return;
   }
-
   const result = await audit(options);
-  
   if (options.uninstallAll) {
     await uninstallAllDependencies(result.results, options);
     return;
   }
-
   if (options.fix && result.found) {
-    console.log(`${colors.cyan}\nâ†’ ${i18n.__('fix.applying')}...${colors.reset}`);
+    console.log(`${colors.cyan}\n→ ${i18n.__('fix.applying')}...${colors.reset}`);
     try {
       const pkg = JSON.parse(fs.readFileSync(result.packagePath, 'utf-8'));
       result.results.direct.packages.forEach(dep => {
@@ -367,22 +356,22 @@ async function runCLI() {
         }
       });
       fs.writeFileSync(result.packagePath, JSON.stringify(pkg, null, 2));
-      console.log(`${colors.green}âœ“ ${i18n.__('fix.complete')}${colors.reset}`);
+      console.log(`${colors.green}✓ ${i18n.__('fix.complete')}${colors.reset}`);
     } catch (error) {
-      console.error(`${colors.red}âŒ  ${i18n.__('errors.fixFailed')}: ${error.message}${colors.reset}`);
+      console.error(`${colors.red}✖  ${i18n.__('errors.fixFailed')}: ${error.message}${colors.reset}`);
     }
   }
 }
 
-// EjecuciÃ³n
+// Ejecución
 if (require.main === module) {
   runCLI().catch(error => {
-    console.error(`${colors.red}âŒ  Error crÃ­tico: ${error.message}${colors.reset}`);
+    console.error(`${colors.red}✖  Error crítico: ${error.message}${colors.reset}`);
     process.exit(1);
   });
 }
 
-// API pÃºblica mejorada
+// API pública mejorada
 module.exports = {
   audit,
   analyzeDependencies,
