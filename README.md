@@ -46,5 +46,19 @@ Comando ejecutado
 Salida obtenida
 Versión de Node.js (node -v)
 Sistema Operativo
+
+#*************mejoras****************************
+## ?? Últimas Mejoras en `detect-silly-deps`
+
+### ?? Rastreo Avanzado de Dependencias
+- Muestra **rutas jerárquicas** completas de paquetes indirectos  
+  Ejemplo: `react > legacy-package > left-pad`
+
+### ?? Métricas de Impacto
+```bash
+=== ESTADÍSTICAS ===
+Total dependencias: 24  
+Espacio estimado: 12MB
+
  Licence
 MIT © 2025 [Samuel Tamayo Infante]
