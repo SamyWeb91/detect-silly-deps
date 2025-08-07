@@ -1,3 +1,27 @@
+# 🧹 detect-silly-deps
+
+A CLI tool to detect and optionally remove trivial or unnecessary dependencies from your Node.js projects. Say goodbye to `is-seven`, `left-pad`, and other nonsense.
+
+## ✨ Features
+
+✅ Detects over 200+ silly or low-value dependencies  
+✅ CLI usage with detailed stats and explanations  
+✅ Supports Spanish output with `--lang=es`  
+✅ Lightweight and fast (under 40 kB)
+
+## 🚀 Installation
+
+```bash
+npm i detect-silly-deps
+
+detect-silly-deps --stats      # Shows size of each dependency  
+detect-silly-deps --verbose    # Detailed report  
+detect-silly-deps --why        # Explains why a dependency is flagged  
+detect-silly-deps --lang=es    # Output in Spanish
+
+#**************leame.md*************************************
+
+
 ✨ Características Principales
 ✅ Detecta 200+ dependencias absurdas o poco utiles
 Español
@@ -22,5 +46,5 @@ Comando ejecutado
 Salida obtenida
 Versión de Node.js (node -v)
 Sistema Operativo
-?? Licencia
+ Licence
 MIT © 2025 [Samuel Tamayo Infante]
