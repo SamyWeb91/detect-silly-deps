@@ -250,7 +250,12 @@ async function runCLI() {
     const lang = args.find(arg => arg.startsWith('--lang=')).split('=')[1];
     if (['en', 'es'].includes(lang)) i18n.setLocale(lang);
   } else {
-    i18n.setLocale(os.locale()?.startsWith('es') ? 'es' : 'en');
+    // Detección segura de idioma
+    const sysLocale =
+      Intl.DateTimeFormat().resolvedOptions().locale ||
+      process.env.LANG ||
+      'en';
+    i18n.setLocale(sysLocale.toLowerCase().startsWith('es') ? 'es' : 'en');
   }
 
   const pkgPath = path.resolve(process.cwd(), 'package.json');
