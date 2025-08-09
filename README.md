@@ -34,6 +34,26 @@ Automatic language detection
 
 Faster and more organized code
 #**************************************************************************
+#**********************************EXAMPLES********************************
+#**********************************************EJEMPLOS***********************
+# Análisis básico
+npx detect-silly-deps
+
+# Modo detallado
+npx detect-silly-deps --verbose
+
+# Filtrar por categoría "performance"
+npx detect-silly-deps --category=performance
+
+# Guardar resultados en JSON
+npx detect-silly-deps --out=resultado.json
+
+# Forzar idioma español
+npx detect-silly-deps --lang=es
+
+# Sin colores
+npx detect-silly-deps --no-color
+#*******************************************************************************
 
 #**************leame.md*************************************
 
@@ -90,7 +110,24 @@ Opción sin colores (--no-color)
 Detección automática de idioma
 
 Código más rápido y organizado
+#**********************************************EJEMPLOS***********************
+# Análisis básico
+npx detect-silly-deps
 
+# Modo detallado
+npx detect-silly-deps --verbose
+
+# Filtrar por categoría "performance"
+npx detect-silly-deps --category=performance
+
+# Guardar resultados en JSON
+npx detect-silly-deps --out=resultado.json
+
+# Forzar idioma español
+npx detect-silly-deps --lang=es
+
+# Sin colores
+npx detect-silly-deps --no-color
 #*******************************************************************************
 
  Licence
