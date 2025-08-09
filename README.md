@@ -18,6 +18,22 @@ detect-silly-deps --stats      # Shows size of each dependency
 detect-silly-deps --verbose    # Detailed report  
 detect-silly-deps --why        # Explains why a dependency is flagged  
 detect-silly-deps --lang=es    # Output in Spanish
+#********** new features***********************************
+Important new features in this code
+Audit history (.silly-history.json)
+
+Result caching for quick analysis
+
+Result export (--out=file.json)
+
+Category filtering (--category=performance, etc.)
+
+Colorless option (--no-color)
+
+Automatic language detection
+
+Faster and more organized code
+#**************************************************************************
 
 #**************leame.md*************************************
 
@@ -59,6 +75,23 @@ Sistema Operativo
 === ESTADÍSTICAS ===
 Total dependencias: 24  
 Espacio estimado: 12MB
+#**************************mejoras ultima version*************************************
+✅ Novedades importantes en este código
+Historial de auditorías (.silly-history.json)
+
+Cacheo de resultados para análisis rápidos
+
+Exportación de resultados (--out=archivo.json)
+
+Filtro por categoría (--category=performance, etc.)
+
+Opción sin colores (--no-color)
+
+Detección automática de idioma
+
+Código más rápido y organizado
+
+#*******************************************************************************
 
  Licence
 MIT © 2025 [Samuel Tamayo Infante]
